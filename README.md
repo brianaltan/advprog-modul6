@@ -53,3 +53,13 @@ let (status_line, filename) = if request_line.starts_with("GET / ") {
 At first, all responses were served with `hello.html` regardless of the requested path. To complete the third milestone, I created another file called `error.html`. When the HTTP status line returns "Sorry, I don't know what you're asking for.", the server responds with `error.html`, and when it returns 200 OK, it serves `hello.html`.  
 
 ![Commit 3 screen capture](/assets/images/commit3.png)
+
+### Reflection: Commit 4
+```rust
+"GET /sleep HTTP/1.1" => {
+    thread::sleep(Duration::from_secs(10));
+    ("HTTP/1.1 200 OK", "hello.html")
+}
+```
+
+After adding `/sleep`, we have to wait if a request is made to the sleep route until it is completed before serving other website requests made afterward. This happens because the program is single-threaded.

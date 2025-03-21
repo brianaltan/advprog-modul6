@@ -2,11 +2,12 @@ use std::{
     fs,
     io::{prelude::*, BufReader},
     net::{TcpListener, TcpStream},
+    thread,
+    time::Duration,
 };
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
-
     for stream in listener.incoming() {
         let stream = stream.unwrap();
         handle_connection(stream);
@@ -20,10 +21,13 @@ fn handle_connection(mut stream: TcpStream) {
         _ => return,
     };
 
-    let (status_line, filename) = if request_line.starts_with("GET / ") {
-        ("HTTP/1.1 200 OK", "hello.html")
-    } else {
-        ("HTTP/1.1 404 NOT FOUND", "error.html")
+    let (status_line, filename) = match &request_line[..] {
+        "GET / HTTP/1.1" => ("HTTP/1.1 200 OK", "hello.html"),
+        "GET /sleep HTTP/1.1" => {
+            thread::sleep(Duration::from_secs(10));
+            ("HTTP/1.1 200 OK", "hello.html")
+        }
+        _ => ("HTTP/1.1 404 NOT FOUND", "error.html"),
     };
 
     let contents = fs::read_to_string(filename).unwrap_or_else(|_| "Page not found".to_string());
