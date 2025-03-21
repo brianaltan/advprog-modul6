@@ -1,6 +1,6 @@
 ### Reflection: Commit 1
 
-```
+```rust
 use std::{ 
     io::{prelude::*, BufReader}, 
     net::{TcpListener, TcpStream}, 
@@ -19,7 +19,7 @@ fn main() {
 At first, the server was only programmed to listen for incoming connections. However, after modifying the code with `handle_connection`, the server is now able to read and parse incoming HTTP requests through `BufReader` to read request lines from the browser.
 
 ### Reflection: Commit 2
-```
+```rust
 fn handle_connection(mut stream: TcpStream) {
     let buf_reader = BufReader::new(&mut stream);
     let http_request: Vec<_> = buf_reader
@@ -39,3 +39,17 @@ fn handle_connection(mut stream: TcpStream) {
 After modifying the code, the Rust compiler provided a warning about an unused variable, `http_request`. This warning indicates that the variable has been declared but never used. It recommends prefixing the variable with an underscore to suppress the warning, acknowledging its presence while indicating that there is no plan to use it.
 
 ![Commit 2 screen capture](/assets/images/commit2.png)
+
+
+### Reflection: Commit 3
+```rust
+let (status_line, filename) = if request_line.starts_with("GET / ") {
+    ("HTTP/1.1 200 OK", "hello.html")
+} else {
+    ("HTTP/1.1 404 NOT FOUND", "error.html")
+};
+```
+
+At first, all responses were served with `hello.html` regardless of the requested path. To complete the third milestone, I created another file called `error.html`. When the HTTP status line returns "Sorry, I don't know what you're asking for.", the server responds with `error.html`, and when it returns 200 OK, it serves `hello.html`.  
+
+![Commit 3 screen capture](/assets/images/commit3.png)
