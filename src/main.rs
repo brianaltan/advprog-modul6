@@ -15,7 +15,7 @@ struct ThreadPool {
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
 impl ThreadPool {
-    fn new(size: usize) -> ThreadPool {
+    fn build(size: usize) -> ThreadPool {
         assert!(size > 0);
 
         let (sender, receiver) = mpsc::channel();
@@ -37,6 +37,7 @@ impl ThreadPool {
         self.sender.send(job).unwrap();
     }
 }
+
 
 struct Worker {
     id: usize,
@@ -76,7 +77,7 @@ impl Drop for ThreadPool {
 
 fn main() {
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
-    let pool = ThreadPool::new(2);
+    let pool = ThreadPool::build(2);
 
     for stream in listener.incoming() {
         let stream = stream.unwrap();

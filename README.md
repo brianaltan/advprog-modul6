@@ -68,3 +68,6 @@ After adding `/sleep`, we have to wait if a request is made to the sleep route u
 Because the code initially used a single-threaded approach, we needed to implement a thread pool to handle multiple requests simultaneously. For example, if a request to `/sleep` is made, it would block all subsequent requests until the current single-threaded process is completed.  
 
 I implemented a thread pool to manage multiple worker threads and also created a worker thread that listens for new tasks. Additionally, I modified the `main` function to assign incoming requests to tasks within the pool.
+
+### Reflection: Bonus
+Changed from `new` to `build`, allowing for customization such as logging, validation, and improved error handling.
