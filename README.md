@@ -63,3 +63,8 @@ At first, all responses were served with `hello.html` regardless of the requeste
 ```
 
 After adding `/sleep`, we have to wait if a request is made to the sleep route until it is completed before serving other website requests made afterward. This happens because the program is single-threaded.
+
+### Reflection: Commit 5
+Because the code initially used a single-threaded approach, we needed to implement a thread pool to handle multiple requests simultaneously. For example, if a request to `/sleep` is made, it would block all subsequent requests until the current single-threaded process is completed.  
+
+I implemented a thread pool to manage multiple worker threads and also created a worker thread that listens for new tasks. Additionally, I modified the `main` function to assign incoming requests to tasks within the pool.
